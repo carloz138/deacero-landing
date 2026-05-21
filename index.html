@@ -261,6 +261,7 @@ footer{background:#060E1C;padding:28px 20px;border-top:1px solid var(--border);t
           <input type="hidden" name="retURL" value="https://carloz138.github.io/deacero-landing/">
           <input type="hidden" name="lead_source" value="Web">
           <input type="hidden" name="Campaign_ID" id="campaign_id" value="701cb00000p1ov4AAA">
+          <input type="hidden" name="PR_Campania_origen__c" id="pr_campania" value="701cb00000p1ov4AAA">
           <input type="hidden" name="member_status" value="Responded">
           <!-- DEBUG: descomenta para diagnosticar -->
           <!-- <input type="hidden" name="debug" value="1"> -->
@@ -512,6 +513,8 @@ footer{background:#060E1C;padding:28px 20px;border-top:1px solid var(--border);t
   var resolved = cid || (utmCampaign && campaigns[utmCampaign]) || '701cb00000p1ov4AAA';
   var el = document.getElementById('campaign_id');
   if(el) el.value = resolved;
+  var el2 = document.getElementById('pr_campania');
+  if(el2) el2.value = resolved;
   /* Also set lead_source from URL if present */
   var src = params.get('lead_source');
   if(src){
