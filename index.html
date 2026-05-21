@@ -260,6 +260,8 @@ footer{background:#060E1C;padding:28px 20px;border-top:1px solid var(--border);t
           <input type="hidden" name="oid" value="00Dcb00000EycJY">
           <input type="hidden" name="retURL" value="https://carloz138.github.io/deacero-landing/">
           <input type="hidden" name="lead_source" value="Web">
+          <input type="hidden" name="Campaign_ID" id="campaign_id" value="701cb00000p1ov4AAA">
+          <input type="hidden" name="member_status" value="Responded">
           <!-- DEBUG: descomenta para diagnosticar -->
           <!-- <input type="hidden" name="debug" value="1"> -->
           <!-- <input type="hidden" name="debugEmail" value="ctellez@deacero.com"> -->
@@ -496,6 +498,28 @@ footer{background:#060E1C;padding:28px 20px;border-top:1px solid var(--border);t
 </a>
 
 <script>
+/* ─── CAMPAIGN ID FROM URL ─── */
+(function(){
+  var campaigns = {
+    'expo_caintra_2025':    '701cb00000ozgsHAAQ',
+    'catalogo_acero_q3':   '701cb00000p1ov4AAA',
+    'email_lamina_jul25':  '701cb00000oyJk7AAE',
+    'tarjeta_ejecutivo_mty':'701cb00000p1J3VAAU'
+  };
+  var params = new URLSearchParams(window.location.search);
+  var utmCampaign = params.get('utm_campaign');
+  var cid = params.get('cid');
+  var resolved = cid || (utmCampaign && campaigns[utmCampaign]) || '701cb00000p1ov4AAA';
+  var el = document.getElementById('campaign_id');
+  if(el) el.value = resolved;
+  /* Also set lead_source from URL if present */
+  var src = params.get('lead_source');
+  if(src){
+    var srcEl = document.querySelector('input[name="lead_source"]');
+    if(srcEl) srcEl.value = decodeURIComponent(src);
+  }
+})();
+
 /* ─── SUBPRODUCTOS ─── */
 var subs = {
   "Presfuerzo y Estructurales":["Alambre Presfuerzo","Torón de Presfuerzo","Fibras DEACERO","Redondo Carretero","Gavión Galvanizado","Malla de Ingeniería","Ángulos Estructurales","Canales Estructurales","Soleras Estructurales","Vigas IPR Estructurales","Vigas IPS Estructurales"],
