@@ -9,17 +9,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --navy:   #0A1628;
-  --navy2:  #0F2044;
-  --navy3:  #1A3260;
-  --orange: #E8500A;
-  --org2:   #FF6B1A;
-  --steel:  #8FA8C8;
-  --light:  #F0F4FA;
-  --border: rgba(143,168,200,0.18);
-  --fd:     'Barlow Condensed', sans-serif;
-  --fb:     'Barlow', sans-serif;
+:root{
+  --navy:#0A1628;--navy2:#0F2044;--navy3:#1A3260;
+  --orange:#E8500A;--org2:#FF6B1A;--steel:#8FA8C8;
+  --border:rgba(143,168,200,0.18);
+  --error:#E84040;--success:#2E844A;
+  --fd:'Barlow Condensed',sans-serif;--fb:'Barlow',sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -29,12 +24,12 @@ body{font-family:var(--fb);background:var(--navy);color:#fff;overflow-x:hidden;l
 nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:rgba(10,22,40,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
 .nav-logo{font-family:var(--fd);font-size:24px;font-weight:800;letter-spacing:2px;color:#fff}
 .nav-logo span{color:var(--orange)}
-.nav-pill{background:var(--orange);color:#fff;font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:8px 18px;border:none;cursor:pointer;border-radius:2px;text-decoration:none;display:inline-block}
+.nav-pill{background:var(--orange);color:#fff;font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:8px 18px;border:none;cursor:pointer;border-radius:2px;text-decoration:none;display:inline-block;-webkit-tap-highlight-color:transparent}
 
-/* HERO MOBILE-FIRST */
+/* HERO */
 .hero{position:relative;padding:32px 20px 0;overflow:hidden;background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%)}
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(143,168,200,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(143,168,200,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
-.hero-accent{position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--orange);box-shadow:0 0 20px rgba(232,80,10,0.5)}
+.hero-accent{position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--orange)}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--fd);font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:12px}
 .eyebrow::before{content:'';display:inline-block;width:20px;height:2px;background:var(--orange)}
 h1{font-family:var(--fd);font-size:clamp(40px,11vw,72px);font-weight:800;line-height:.95;text-transform:uppercase;letter-spacing:-1px;margin-bottom:16px}
@@ -54,32 +49,87 @@ h1 em{font-style:normal;color:var(--orange);display:block}
 .form-card::after{content:'';position:absolute;bottom:0;right:0;width:48px;height:48px;border-bottom:2px solid var(--orange);border-right:2px solid var(--orange)}
 .form-title{font-family:var(--fd);font-size:22px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
 .form-sub{font-size:12px;color:var(--steel);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
-.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+
+/* FIELD GROUPS */
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;position:relative}
 .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-label{font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--steel)}
-label .req{color:var(--orange);margin-left:2px}
-input,select{background:rgba(10,22,40,0.8);border:1px solid rgba(143,168,200,0.2);border-bottom:2px solid rgba(143,168,200,0.3);color:#fff;font-family:var(--fb);font-size:16px;padding:13px 14px;outline:none;width:100%;transition:border-color .2s;-webkit-appearance:none;appearance:none;border-radius:0;min-height:48px}
+label.lbl{font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--steel)}
+label.lbl .req{color:var(--orange);margin-left:2px}
+
+/* INPUTS */
+input,select{
+  background:rgba(10,22,40,0.8);
+  border:1px solid rgba(143,168,200,0.2);
+  border-bottom:2px solid rgba(143,168,200,0.3);
+  color:#fff;font-family:var(--fb);font-size:16px;
+  padding:13px 14px;outline:none;width:100%;
+  transition:border-color .2s,background .2s;
+  -webkit-appearance:none;appearance:none;border-radius:0;min-height:48px
+}
 input::placeholder{color:rgba(143,168,200,0.35)}
 input:focus,select:focus{border-color:var(--orange);border-bottom-color:var(--orange);background:rgba(10,22,40,.98)}
+
+/* VALIDATION STATES */
+.fg.has-error input,
+.fg.has-error select{border-color:var(--error);border-bottom-color:var(--error)}
+.fg.has-success input,
+.fg.has-success select{border-bottom-color:var(--success)}
+.field-error{display:none;font-size:11px;color:var(--error);margin-top:4px;align-items:center;gap:4px}
+.field-error svg{width:12px;height:12px;stroke:var(--error);fill:none;stroke-width:2.5;flex-shrink:0}
+.fg.has-error .field-error{display:flex}
+
+/* SELECT */
 select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238FA8C8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
 select option{background:var(--navy2);color:#fff}
-.sub-group{transition:opacity .3s,max-height .3s}
-.sub-group.hidden{opacity:.3;pointer-events:none;max-height:80px}
+.sub-group{transition:opacity .3s}
+.sub-group.hidden{opacity:.3;pointer-events:none}
+
+/* TONS HINT */
 .tons-hint{font-size:11px;color:var(--steel);opacity:.6;margin-top:3px}
+
+/* DIVIDER */
 .divider{height:1px;background:var(--border);margin:18px 0}
-.check-row{display:flex;align-items:flex-start;gap:0;margin-bottom:20px;cursor:pointer;-webkit-tap-highlight-color:transparent;padding:12px;background:rgba(143,168,200,0.05);border:1px solid var(--border);user-select:none}
+
+/* CHECKBOX */
+.check-row{display:flex;align-items:flex-start;gap:0;margin-bottom:20px;cursor:pointer;-webkit-tap-highlight-color:transparent;padding:12px;background:rgba(143,168,200,0.05);border:1px solid var(--border);user-select:none;transition:border-color .2s}
+.check-row.has-error{border-color:var(--error)}
 .check-row input[type=checkbox]{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
 .check-custom{width:24px;height:24px;min-width:24px;border:2px solid var(--orange);background:transparent;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-right:12px;margin-top:1px;transition:background .15s}
 .check-custom svg{display:none;width:14px;height:14px;stroke:#fff;stroke-width:3;fill:none}
 .check-custom.checked{background:var(--orange)}
 .check-custom.checked svg{display:block}
 .check-row-label{text-transform:none;letter-spacing:0;font-weight:400;font-size:12px;color:var(--steel);line-height:1.6;flex:1}
-.submit-btn{width:100%;background:var(--orange);color:#fff;border:none;font-family:var(--fd);font-size:20px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:18px;cursor:pointer;border-radius:2px;transition:background .2s;position:relative;overflow:hidden;min-height:56px;-webkit-tap-highlight-color:transparent}
-.submit-btn:active{background:var(--org2);transform:scale(0.99)}
-.submit-btn.loading{opacity:.7;pointer-events:none}
+.consent-error{display:none;font-size:11px;color:var(--error);margin-top:-14px;margin-bottom:14px;align-items:center;gap:4px}
+.consent-error svg{width:12px;height:12px;stroke:var(--error);fill:none;stroke-width:2.5;flex-shrink:0}
+.consent-error.show{display:flex}
+
+/* GLOBAL ERROR BANNER */
+.error-banner{display:none;background:rgba(232,64,64,0.1);border:1px solid rgba(232,64,64,0.4);border-left:3px solid var(--error);padding:12px 16px;margin-bottom:16px;border-radius:0;animation:slideDown .3s ease}
+.error-banner.show{display:block}
+.error-banner-title{font-size:13px;font-weight:600;color:var(--error);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.error-banner-title svg{width:14px;height:14px;stroke:var(--error);fill:none;stroke-width:2.5}
+.error-banner-list{font-size:12px;color:rgba(232,64,64,0.85);padding-left:16px;line-height:1.8}
+
+/* SUCCESS BANNER */
+.success-banner{display:none;background:rgba(46,132,74,0.1);border:1px solid rgba(46,132,74,0.4);border-left:3px solid var(--success);padding:12px 16px;margin-bottom:16px}
+.success-banner.show{display:block}
+.success-banner-title{font-size:13px;font-weight:600;color:#2E844A;display:flex;align-items:center;gap:6px}
+.success-banner-title svg{width:14px;height:14px;stroke:#2E844A;fill:none;stroke-width:2.5}
+
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+/* SUBMIT BTN */
+.submit-btn{width:100%;background:var(--orange);color:#fff;border:none;font-family:var(--fd);font-size:20px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:18px;cursor:pointer;border-radius:2px;transition:background .2s,transform .15s;position:relative;overflow:hidden;min-height:56px;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;gap:10px}
+.submit-btn:not(.loading):active{background:var(--org2);transform:scale(0.99)}
+.submit-btn.loading{opacity:.75;pointer-events:none;cursor:not-allowed}
+.spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;display:none}
+.submit-btn.loading .spinner{display:block}
+.submit-btn.loading .btn-text{opacity:.7}
 .guarantee{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;font-size:11px;color:rgba(143,168,200,.5)}
 
-/* FLOATING CTA — visible only when form is out of view */
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* FLOAT CTA */
 .float-cta{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:200;background:var(--orange);color:#fff;font-family:var(--fd);font-size:16px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:14px 32px;border:none;cursor:pointer;border-radius:2px;box-shadow:0 8px 32px rgba(232,80,10,.5);display:none;white-space:nowrap;-webkit-tap-highlight-color:transparent;text-decoration:none}
 .float-cta.visible{display:block;animation:floatIn .3s ease both}
 @keyframes floatIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
@@ -88,6 +138,7 @@ select option{background:var(--navy2);color:#fff}
 .trust-bar{background:var(--orange);padding:16px 20px;display:flex;flex-direction:column;gap:10px}
 .trust-item{display:flex;align-items:center;gap:8px;font-family:var(--fd);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#fff}
 .trust-item svg{width:18px;height:18px;stroke:rgba(255,255,255,.85);fill:none;stroke-width:2;flex-shrink:0}
+.trust-divider{display:none}
 
 /* PRODUCTS */
 .products{padding:40px 20px}
@@ -123,12 +174,11 @@ footer{background:#060E1C;padding:28px 20px;border-top:1px solid var(--border);t
 .ty-text{font-size:13px;color:var(--steel);line-height:1.5}
 .ty-back{background:var(--orange);color:#fff;font-family:var(--fd);font-size:16px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:14px 32px;border:none;cursor:pointer;border-radius:2px;-webkit-tap-highlight-color:transparent}
 
-/* DESKTOP ENHANCEMENTS */
+/* DESKTOP */
 @media(min-width:768px){
   nav{padding:0 48px;height:64px}
   .nav-logo{font-size:28px}
   .hero{display:grid;grid-template-columns:1fr 1fr;align-items:center;min-height:100vh;padding:80px 0 0}
-  .hero-accent{top:0}
   .hero-content-wrap{padding:0 48px 80px 80px}
   .form-wrap{padding:80px 80px 80px 40px;margin-top:0}
   .form-card{margin-top:0;padding:40px}
@@ -137,32 +187,26 @@ footer{background:#060E1C;padding:28px 20px;border-top:1px solid var(--border);t
   .fg-row{grid-template-columns:1fr 1fr}
   .float-cta{display:none !important}
   .trust-bar{flex-direction:row;justify-content:space-between;padding:20px 80px}
-  .trust-divider{width:1px;height:28px;background:rgba(255,255,255,.25)}
+  .trust-divider{display:block;width:1px;height:28px;background:rgba(255,255,255,.25)}
   .products{padding:60px 80px}
   .prod-grid{grid-template-columns:repeat(3,1fr)}
   footer{display:flex;align-items:center;justify-content:space-between;padding:32px 80px;text-align:left}
   .footer-copy{margin-bottom:0}
   .ty-steps{flex-direction:row;max-width:640px}
 }
-
-/* Input validation colors */
-input:required:invalid:not(:placeholder-shown){border-bottom-color:#e84040}
-input:required:valid{border-bottom-color:#2E844A}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <iframe name="sf-sink" style="display:none" aria-hidden="true"></iframe>
+
 <nav>
   <div class="nav-logo">DEA<span>CERO</span></div>
-  <a href="#form-card" class="nav-pill">Cotiza ahora</a>
+  <a href="#form-card" class="nav-pill" onclick="scrollToForm();return false;">Cotiza ahora</a>
 </nav>
 
-<!-- LANDING -->
 <div id="landing">
 
-  <!-- HERO -->
   <section class="hero" id="inicio">
     <div class="hero-grid"></div>
     <div class="hero-accent"></div>
@@ -183,11 +227,27 @@ input:required:valid{border-bottom-color:#2E844A}
       </div>
     </div>
 
-    <!-- FORM -->
     <div class="form-wrap" id="formulario">
       <div class="form-card" id="form-card">
         <div class="form-title">Solicita tu cotización</div>
         <div class="form-sub">Un especialista te contacta en menos de 24 horas</div>
+
+        <!-- ERROR BANNER -->
+        <div class="error-banner" id="error-banner">
+          <div class="error-banner-title">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Por favor corrige los siguientes campos:
+          </div>
+          <ul class="error-banner-list" id="error-list"></ul>
+        </div>
+
+        <!-- SUCCESS BANNER -->
+        <div class="success-banner" id="success-banner">
+          <div class="success-banner-title">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Formulario enviado — te contactamos en menos de 24 horas.
+          </div>
+        </div>
 
         <form
           action="https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00Dcb00000EycJY"
@@ -200,53 +260,86 @@ input:required:valid{border-bottom-color:#2E844A}
           <input type="hidden" name="oid" value="00Dcb00000EycJY">
           <input type="hidden" name="retURL" value="https://carloz138.github.io/deacero-landing/">
           <input type="hidden" name="lead_source" value="Web">
-          <!-- Descomenta para debug:
-          <input type="hidden" name="debug" value="1">
-          <input type="hidden" name="debugEmail" value="ctellez@deacero.com"> -->
+          <!-- DEBUG: descomenta para diagnosticar -->
+          <!-- <input type="hidden" name="debug" value="1"> -->
+          <!-- <input type="hidden" name="debugEmail" value="ctellez@deacero.com"> -->
 
           <div class="fg-row">
-            <div class="fg">
-              <label for="first_name">Nombre <span class="req">*</span></label>
-              <input id="first_name" name="first_name" type="text" maxlength="40" placeholder="Carlos" required autocomplete="given-name">
+            <div class="fg" id="fg-first_name">
+              <label class="lbl" for="first_name">Nombre <span class="req">*</span></label>
+              <input id="first_name" name="first_name" type="text" maxlength="40"
+                placeholder="Carlos" autocomplete="given-name"
+                oninput="clearError('fg-first_name')" onblur="validateField('fg-first_name')">
+              <div class="field-error" id="err-first_name">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>El nombre es obligatorio</span>
+              </div>
             </div>
-            <div class="fg">
-              <label for="last_name">Apellidos <span class="req">*</span></label>
-              <input id="last_name" name="last_name" type="text" maxlength="80" placeholder="Ramírez" required autocomplete="family-name">
+            <div class="fg" id="fg-last_name">
+              <label class="lbl" for="last_name">Apellidos <span class="req">*</span></label>
+              <input id="last_name" name="last_name" type="text" maxlength="80"
+                placeholder="Ramírez Torres" autocomplete="family-name"
+                oninput="clearError('fg-last_name')" onblur="validateField('fg-last_name')">
+              <div class="field-error" id="err-last_name">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>Los apellidos son obligatorios</span>
+              </div>
             </div>
           </div>
 
-          <div class="fg">
-            <label for="email">Correo electrónico <span class="req">*</span></label>
-            <input id="email" name="email" type="email" maxlength="80" placeholder="carlos@empresa.com" required autocomplete="email" inputmode="email">
-          </div>
-
-          <div class="fg-row">
-            <div class="fg">
-              <label for="phone">Teléfono <span class="req">*</span></label>
-              <input id="phone" name="phone" type="tel" maxlength="40" placeholder="81 1234 5678" required autocomplete="tel" inputmode="tel">
-            </div>
-            <div class="fg">
-              <label for="company">Empresa <span class="req">*</span></label>
-              <input id="company" name="company" type="text" maxlength="40" placeholder="Constructora ABC" required autocomplete="organization">
+          <div class="fg" id="fg-email">
+            <label class="lbl" for="email">Correo electrónico <span class="req">*</span></label>
+            <input id="email" name="email" type="email" maxlength="80"
+              placeholder="carlos@empresa.com" autocomplete="email" inputmode="email"
+              oninput="clearError('fg-email')" onblur="validateEmail()">
+            <div class="field-error" id="err-email">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span id="err-email-msg">Ingresa un correo válido (ej. nombre@empresa.com)</span>
             </div>
           </div>
 
           <div class="fg-row">
-            <div class="fg">
-              <label for="city">Ciudad</label>
-              <input id="city" name="city" type="text" maxlength="40" placeholder="Monterrey" autocomplete="address-level2">
+            <div class="fg" id="fg-phone">
+              <label class="lbl" for="phone">Teléfono <span class="req">*</span></label>
+              <input id="phone" name="phone" type="tel" maxlength="40"
+                placeholder="81 1234 5678" autocomplete="tel" inputmode="tel"
+                oninput="clearError('fg-phone')" onblur="validatePhone()">
+              <div class="field-error" id="err-phone">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>Ingresa un teléfono de al menos 10 dígitos</span>
+              </div>
             </div>
-            <div class="fg">
-              <label for="state">Estado</label>
-              <input id="state" name="state" type="text" maxlength="20" placeholder="Nuevo León" autocomplete="address-level1">
+            <div class="fg" id="fg-company">
+              <label class="lbl" for="company">Empresa <span class="req">*</span></label>
+              <input id="company" name="company" type="text" maxlength="40"
+                placeholder="Constructora ABC" autocomplete="organization"
+                oninput="clearError('fg-company')" onblur="validateField('fg-company')">
+              <div class="field-error" id="err-company">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>El nombre de empresa es obligatorio</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="fg-row">
+            <div class="fg" id="fg-city">
+              <label class="lbl" for="city">Ciudad</label>
+              <input id="city" name="city" type="text" maxlength="40"
+                placeholder="Monterrey" autocomplete="address-level2">
+            </div>
+            <div class="fg" id="fg-state">
+              <label class="lbl" for="state">Estado</label>
+              <input id="state" name="state" type="text" maxlength="20"
+                placeholder="Nuevo León" autocomplete="address-level1">
             </div>
           </div>
 
           <div class="divider"></div>
 
-          <div class="fg">
-            <label for="00N5a00000D3PMo">Tipo de producto <span class="req">*</span></label>
-            <select id="00N5a00000D3PMo" name="00N5a00000D3PMo" required onchange="filterSub(this.value)">
+          <div class="fg" id="fg-producto">
+            <label class="lbl" for="00N5a00000D3PMo">Tipo de producto <span class="req">*</span></label>
+            <select id="00N5a00000D3PMo" name="00N5a00000D3PMo"
+              onchange="filterSub(this.value);clearError('fg-producto')" onblur="validateSelect('fg-producto')">
               <option value="">— Selecciona una línea —</option>
               <option value="Presfuerzo y Estructurales">Presfuerzo y Estructurales</option>
               <option value="Construcción">Construcción</option>
@@ -257,33 +350,51 @@ input:required:valid{border-bottom-color:#2E844A}
               <option value="Cadenas y Clavos">Cadenas y Clavos</option>
               <option value="Alambres">Alambres</option>
             </select>
+            <div class="field-error" id="err-producto">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span>Selecciona el tipo de producto</span>
+            </div>
           </div>
 
           <div class="fg sub-group hidden" id="sub-group">
-            <label for="00N5a00000C2213">Subproducto</label>
+            <label class="lbl" for="00N5a00000C2213">Subproducto</label>
             <select id="00N5a00000C2213" name="00N5a00000C2213">
               <option value="">— Selecciona el tipo primero —</option>
             </select>
           </div>
 
-          <div class="fg">
-            <label for="00N5a00000DX97g">Toneladas requeridas</label>
-            <input id="00N5a00000DX97g" name="00N5a00000DX97g" type="number" min="0" step="0.01" placeholder="Ej. 25.5" inputmode="decimal">
+          <div class="fg" id="fg-tons">
+            <label class="lbl" for="00N5a00000DX97g">Toneladas requeridas</label>
+            <input id="00N5a00000DX97g" name="00N5a00000DX97g" type="number"
+              min="0" step="0.01" placeholder="Ej. 25.5" inputmode="decimal"
+              onblur="validateTons()">
             <span class="tons-hint">Estimado — déjalo en blanco si no sabes aún</span>
+            <div class="field-error" id="err-tons">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span>Ingresa un número mayor a cero</span>
+            </div>
           </div>
 
           <div class="divider"></div>
 
-          <div class="check-row" onclick="toggleConsent()">
-            <input type="checkbox" id="consent" required>
+          <div class="check-row" id="check-row" onclick="toggleConsent()">
+            <input type="checkbox" id="consent">
             <div class="check-custom" id="check-custom">
               <svg viewBox="0 0 14 14"><polyline points="2 7 5.5 10.5 12 3"/></svg>
             </div>
-            <span class="check-row-label">Acepto que DEACERO procese mis datos para contactarme con información comercial. <a href="#" style="color:#FF8C42" onclick="event.stopPropagation()">Aviso de privacidad</a></span>
+            <span class="check-row-label">
+              Acepto que DEACERO procese mis datos para contactarme con información comercial.
+              <a href="#" style="color:#FF8C42" onclick="event.stopPropagation()">Aviso de privacidad</a>
+            </span>
+          </div>
+          <div class="consent-error" id="consent-error">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>Debes aceptar el aviso de privacidad para continuar</span>
           </div>
 
           <button type="submit" class="submit-btn" id="submit-btn">
-            Solicitar cotización →
+            <span class="btn-text">Solicitar cotización →</span>
+            <div class="spinner"></div>
           </button>
 
           <div class="guarantee">
@@ -295,7 +406,6 @@ input:required:valid{border-bottom-color:#2E844A}
     </div>
   </section>
 
-  <!-- TRUST BAR -->
   <div class="trust-bar">
     <div class="trust-item">
       <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -318,37 +428,36 @@ input:required:valid{border-bottom-color:#2E844A}
     </div>
   </div>
 
-  <!-- PRODUCTS -->
   <section class="products">
     <div class="sec-label">Nuestras líneas</div>
     <div class="sec-title">Soluciones<br>de acero</div>
     <div class="prod-grid">
-      <a href="#formulario" class="prod-card" onclick="scrollToForm()">
+      <a href="#formulario" class="prod-card" onclick="scrollToForm();return false;">
         <div class="prod-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="4" rx="1"/><rect x="2" y="10" width="20" height="4" rx="1"/><rect x="2" y="17" width="20" height="4" rx="1"/></svg></div>
         <div class="prod-name">Estructural</div>
         <div class="prod-desc">Vigas IPR, IPS, ángulos, canales y soleras</div>
       </a>
-      <a href="#formulario" class="prod-card" onclick="scrollToForm()">
+      <a href="#formulario" class="prod-card" onclick="scrollToForm();return false;">
         <div class="prod-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg></div>
         <div class="prod-name">Construcción</div>
         <div class="prod-desc">Varilla G42 y G60, alambrón para construcción</div>
       </a>
-      <a href="#formulario" class="prod-card" onclick="scrollToForm()">
+      <a href="#formulario" class="prod-card" onclick="scrollToForm();return false;">
         <div class="prod-icon"><svg viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg></div>
         <div class="prod-name">Cercos</div>
         <div class="prod-desc">Malla ciclónica, graduada, soldada y perimetral</div>
       </a>
-      <a href="#formulario" class="prod-card" onclick="scrollToForm()">
+      <a href="#formulario" class="prod-card" onclick="scrollToForm();return false;">
         <div class="prod-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg></div>
         <div class="prod-name">Rejas</div>
         <div class="prod-desc">Reja DEACERO clásica, Forte, Florencia y Milán</div>
       </a>
-      <a href="#formulario" class="prod-card" onclick="scrollToForm()">
+      <a href="#formulario" class="prod-card" onclick="scrollToForm();return false;">
         <div class="prod-icon"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg></div>
         <div class="prod-name">Alambres</div>
         <div class="prod-desc">Galvanizado, recocido, de púas y especiales</div>
       </a>
-      <a href="#formulario" class="prod-card" onclick="scrollToForm()">
+      <a href="#formulario" class="prod-card" onclick="scrollToForm();return false;">
         <div class="prod-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
         <div class="prod-name">Habilitado</div>
         <div class="prod-desc">Acero habilitado y varilla cortada a medida</div>
@@ -373,7 +482,7 @@ input:required:valid{border-bottom-color:#2E844A}
   <div class="ty-title">¡Listo,<br><span style="color:var(--orange)">gracias!</span></div>
   <p class="ty-sub">Tu solicitud llegó a nuestro equipo. Te contactamos en menos de 24 horas.</p>
   <div class="ty-steps">
-    <div class="ty-step"><div class="ty-num">01</div><div class="ty-text">Recibiste un correo de confirmación a tu correo registrado.</div></div>
+    <div class="ty-step"><div class="ty-num">01</div><div class="ty-text">Recibirás un correo de confirmación a tu dirección registrada.</div></div>
     <div class="ty-step"><div class="ty-num">02</div><div class="ty-text">Un especialista prepara tu cotización personalizada.</div></div>
     <div class="ty-step"><div class="ty-num">03</div><div class="ty-text">Te llamamos o escribimos en menos de 24 horas.</div></div>
   </div>
@@ -381,14 +490,14 @@ input:required:valid{border-bottom-color:#2E844A}
   <div class="footer-logo" style="margin-top:32px;font-size:18px">DEA<span>CERO</span></div>
 </div>
 
-<!-- FLOATING CTA -->
+<!-- FLOAT CTA -->
 <a href="#form-card" class="float-cta" id="float-cta" onclick="scrollToForm();return false;">
   Cotizar ahora →
 </a>
 
 <script>
-/* SUBPRODUCTOS */
-const subs = {
+/* ─── SUBPRODUCTOS ─── */
+var subs = {
   "Presfuerzo y Estructurales":["Alambre Presfuerzo","Torón de Presfuerzo","Fibras DEACERO","Redondo Carretero","Gavión Galvanizado","Malla de Ingeniería","Ángulos Estructurales","Canales Estructurales","Soleras Estructurales","Vigas IPR Estructurales","Vigas IPS Estructurales"],
   "Construcción":["Varilla Grado 42","Varilla Grado 60","Alambrón Construcción","Alambrón Trefilado Alto Carbón"],
   "Habilitado":["Habilitado de Varilla","Acero Habilitado","Castillo Doblado","Castillo en Hojas","Armadura","Escalerilla","Estribos"],
@@ -399,78 +508,198 @@ const subs = {
   "Alambres":["Alambre Galvanizado Ferretero","Alambre Recocido para la Construcción","Alambre Galvanizado Caja","Alambre para Amarres","Alambre Plano","Alambre Bobina (para pacas forraje)","Alambre Galvanizado Fin","Alambre de púas Vaquero","Alambre de púas Potrero","Alambre de púas Potrero con recubrimiento Xtreme","Alambre de púas Nacional","Alambre de púas Cebú","Alambre de púas Gran Vaquero","Alambre de púas Corcél con recubrimiento Xtreme"]
 };
 
-function filterSub(tipo) {
-  const grp = document.getElementById('sub-group');
-  const sel = document.getElementById('00N5a00000C2213');
-  const opts = subs[tipo] || [];
-  sel.innerHTML = '<option value="">— Selecciona subproducto —</option>';
-  opts.forEach(function(v){
-    var o = document.createElement('option');
-    o.value = v; o.textContent = v;
-    sel.appendChild(o);
-  });
-  grp.classList.toggle('hidden', opts.length === 0);
+function filterSub(tipo){
+  var grp=document.getElementById('sub-group');
+  var sel=document.getElementById('00N5a00000C2213');
+  var opts=subs[tipo]||[];
+  sel.innerHTML='<option value="">— Selecciona subproducto —</option>';
+  opts.forEach(function(v){var o=document.createElement('option');o.value=v;o.textContent=v;sel.appendChild(o);});
+  grp.classList.toggle('hidden',opts.length===0);
 }
 
-/* FLOATING CTA: show when form-card not in viewport */
-var formCard = document.getElementById('form-card');
-var floatCta = document.getElementById('float-cta');
-var obs = new IntersectionObserver(function(entries){
-  floatCta.classList.toggle('visible', !entries[0].isIntersecting);
-},{threshold:0.1});
-obs.observe(formCard);
+/* ─── CHECKBOX ─── */
+function toggleConsent(){
+  var cb=document.getElementById('consent');
+  var box=document.getElementById('check-custom');
+  var row=document.getElementById('check-row');
+  cb.checked=!cb.checked;
+  box.classList.toggle('checked',cb.checked);
+  if(cb.checked){
+    row.classList.remove('has-error');
+    document.getElementById('consent-error').classList.remove('show');
+  }
+}
+
+/* ─── VALIDATION HELPERS ─── */
+function setError(fgId,show){
+  var fg=document.getElementById(fgId);
+  if(!fg)return;
+  fg.classList.toggle('has-error',show);
+  fg.classList.toggle('has-success',!show&&!!fg.querySelector('input,select').value.trim());
+}
+
+function clearError(fgId){
+  var fg=document.getElementById(fgId);
+  if(fg){fg.classList.remove('has-error');fg.classList.remove('has-success');}
+}
+
+function validateField(fgId){
+  var fg=document.getElementById(fgId);
+  if(!fg)return true;
+  var inp=fg.querySelector('input,select');
+  var ok=inp.value.trim().length>0;
+  setError(fgId,!ok);
+  return ok;
+}
+
+function validateSelect(fgId){
+  var fg=document.getElementById(fgId);
+  if(!fg)return true;
+  var sel=fg.querySelector('select');
+  var ok=sel.value!=='';
+  setError(fgId,!ok);
+  return ok;
+}
+
+function validateEmail(){
+  var val=document.getElementById('email').value.trim();
+  var ok=val.length>0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+  var empty=val.length===0;
+  document.getElementById('err-email-msg').textContent=empty
+    ?'El correo electrónico es obligatorio'
+    :'Ingresa un correo válido (ej. nombre@empresa.com)';
+  setError('fg-email',!ok);
+  return ok;
+}
+
+function validatePhone(){
+  var val=document.getElementById('phone').value.trim().replace(/\D/g,'');
+  var ok=val.length>=10;
+  setError('fg-phone',!ok);
+  return ok;
+}
+
+function validateTons(){
+  var val=document.getElementById('00N5a00000DX97g').value;
+  if(val==='')return true; /* optional field */
+  var num=parseFloat(val);
+  var ok=!isNaN(num)&&num>=0;
+  setError('fg-tons',!ok);
+  return ok;
+}
+
+function validateConsent(){
+  var checked=document.getElementById('consent').checked;
+  document.getElementById('check-row').classList.toggle('has-error',!checked);
+  document.getElementById('consent-error').classList.toggle('show',!checked);
+  return checked;
+}
+
+/* ─── FULL FORM VALIDATION ─── */
+function validateAll(){
+  var errors=[];
+  var checks=[
+    {fn:function(){return validateField('fg-first_name');}, label:'Nombre'},
+    {fn:function(){return validateField('fg-last_name');},  label:'Apellidos'},
+    {fn:function(){return validateEmail();},                label:'Correo electrónico'},
+    {fn:function(){return validatePhone();},                label:'Teléfono (mínimo 10 dígitos)'},
+    {fn:function(){return validateField('fg-company');},    label:'Empresa'},
+    {fn:function(){return validateSelect('fg-producto');},  label:'Tipo de producto'},
+    {fn:function(){return validateTons();},                 label:'Toneladas (valor inválido)'},
+    {fn:function(){return validateConsent();},              label:'Aceptar aviso de privacidad'},
+  ];
+
+  var firstError=null;
+  checks.forEach(function(c){
+    var ok=c.fn();
+    if(!ok){
+      errors.push(c.label);
+      if(!firstError){
+        /* find first errored element to scroll to */
+        var errored=document.querySelector('.fg.has-error, .check-row.has-error');
+        firstError=errored;
+      }
+    }
+  });
+
+  var banner=document.getElementById('error-banner');
+  var list=document.getElementById('error-list');
+
+  if(errors.length>0){
+    list.innerHTML=errors.map(function(e){return '<li>'+e+'</li>';}).join('');
+    banner.classList.add('show');
+    if(firstError){
+      firstError.scrollIntoView({behavior:'smooth',block:'center'});
+    } else {
+      banner.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    return false;
+  }
+
+  banner.classList.remove('show');
+  return true;
+}
+
+/* ─── SUBMIT ─── */
+function handleSubmit(e){
+  e.preventDefault();
+
+  if(!validateAll()) return;
+
+  var btn=document.getElementById('submit-btn');
+  var form=document.getElementById('deacero-form');
+
+  btn.classList.add('loading');
+  btn.querySelector('.btn-text').textContent='Enviando...';
+
+  /* Native POST to Salesforce via iframe — most reliable method */
+  form.submit();
+
+  /* Show thank you after short delay (SF processes async) */
+  setTimeout(function(){
+    document.getElementById('landing').style.display='none';
+    document.getElementById('ty').classList.add('show');
+    document.getElementById('float-cta').style.display='none';
+    window.scrollTo(0,0);
+  }, 800);
+}
+
+/* ─── RESET ─── */
+function resetPage(){
+  document.getElementById('ty').classList.remove('show');
+  document.getElementById('landing').style.display='block';
+  document.getElementById('deacero-form').reset();
+  /* reset custom checkbox */
+  document.getElementById('consent').checked=false;
+  document.getElementById('check-custom').classList.remove('checked');
+  document.getElementById('check-row').classList.remove('has-error');
+  document.getElementById('consent-error').classList.remove('show');
+  /* reset all field states */
+  document.querySelectorAll('.fg').forEach(function(fg){
+    fg.classList.remove('has-error','has-success');
+  });
+  document.getElementById('error-banner').classList.remove('show');
+  document.getElementById('success-banner').classList.remove('show');
+  document.getElementById('sub-group').classList.add('hidden');
+  var btn=document.getElementById('submit-btn');
+  btn.classList.remove('loading');
+  btn.querySelector('.btn-text').textContent='Solicitar cotización →';
+  window.scrollTo(0,0);
+}
+
+/* ─── FLOAT CTA ─── */
+var formCard=document.getElementById('form-card');
+var floatCta=document.getElementById('float-cta');
+if('IntersectionObserver' in window){
+  var obs=new IntersectionObserver(function(entries){
+    floatCta.classList.toggle('visible',!entries[0].isIntersecting);
+  },{threshold:0.1});
+  obs.observe(formCard);
+}
 
 function scrollToForm(){
   document.getElementById('form-card').scrollIntoView({behavior:'smooth',block:'start'});
 }
-
-/* FORM SUBMIT */
-function toggleConsent(){
-  var cb = document.getElementById('consent');
-  var box = document.getElementById('check-custom');
-  cb.checked = !cb.checked;
-  box.classList.toggle('checked', cb.checked);
-}
-
-function handleSubmit(e){
-  e.preventDefault();
-  var form = document.getElementById('deacero-form');
-  var consent = document.getElementById('consent');
-  var req = form.querySelectorAll('[required]');
-  var valid = true;
-  req.forEach(function(el){
-    if(!el.value.trim()||(el.type==='checkbox'&&!el.checked)){valid=false;}
-  });
-  if(!valid){
-    alert('Por favor completa todos los campos obligatorios.');
-    return;
-  }
-  var btn = document.getElementById('submit-btn');
-  btn.textContent = 'Enviando...';
-  btn.classList.add('loading');
-  form.submit();
-  setTimeout(function(){
-    document.getElementById('landing').style.display = 'none';
-    var ty = document.getElementById('ty');
-    ty.classList.add('show');
-    floatCta.style.display = 'none';
-    window.scrollTo(0,0);
-  }, 600);
-}
-
-function resetPage(){
-  document.getElementById('ty').classList.remove('show');
-  document.getElementById('landing').style.display = 'block';
-  var btn = document.getElementById('submit-btn');
-  btn.textContent = 'Solicitar cotización →';
-  btn.classList.remove('loading');
-  window.scrollTo(0,0);
-}
-
-/* smooth scroll all #formulario links */
-document.querySelectorAll('a[href="#formulario"]').forEach(function(a){
-  a.addEventListener('click',function(e){e.preventDefault();scrollToForm();});
-});
 </script>
 </body>
 </html>
