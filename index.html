@@ -153,6 +153,7 @@ input:required:valid{border-bottom-color:#2E844A}
 <body>
 
 <!-- NAV -->
+<iframe name="sf-sink" style="display:none" aria-hidden="true"></iframe>
 <nav>
   <div class="nav-logo">DEA<span>CERO</span></div>
   <a href="#form-card" class="nav-pill">Cotiza ahora</a>
@@ -189,17 +190,19 @@ input:required:valid{border-bottom-color:#2E844A}
         <div class="form-sub">Un especialista te contacta en menos de 24 horas</div>
 
         <form
-            action="https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00Dcb00000EycJY"
-            method="POST"
-            id="deacero-form"
-            onsubmit="handleSubmit(event)"
-            novalidate
-          >
+          action="https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00Dcb00000EycJY"
+          method="POST"
+          id="deacero-form"
+          target="sf-sink"
+          onsubmit="handleSubmit(event)"
+          novalidate
+        >
           <input type="hidden" name="oid" value="00Dcb00000EycJY">
           <input type="hidden" name="retURL" value="https://carloz138.github.io/deacero-landing/">
-          <input type="hidden" name="lead_source" value="Web - Formulario">
+          <input type="hidden" name="lead_source" value="Web">
+          <!-- Descomenta para debug:
           <input type="hidden" name="debug" value="1">
-          <input type="hidden" name="debugEmail" value="ctellez@deacero.com">
+          <input type="hidden" name="debugEmail" value="ctellez@deacero.com"> -->
 
           <div class="fg-row">
             <div class="fg">
@@ -445,7 +448,7 @@ function handleSubmit(e){
   var btn = document.getElementById('submit-btn');
   btn.textContent = 'Enviando...';
   btn.classList.add('loading');
-  fetch(form.action,{method:'POST',mode:'no-cors',body:new FormData(form)}).catch(function(){});
+  form.submit();
   setTimeout(function(){
     document.getElementById('landing').style.display = 'none';
     var ty = document.getElementById('ty');
