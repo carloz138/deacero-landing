@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Codes DEACERO — Imprimir</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@400;500&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Barlow',sans-serif;background:#f5f5f5;padding:32px 24px;color:#0A1628}
+
+  h1{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+  .subtitle{font-size:14px;color:#555;margin-bottom:32px}
+
+  .url-input-row{display:flex;gap:10px;align-items:center;margin-bottom:32px;flex-wrap:wrap}
+  .url-input-row label{font-size:13px;font-weight:500;white-space:nowrap}
+  .url-input-row input{flex:1;min-width:260px;padding:10px 14px;border:1px solid #ccc;border-radius:4px;font-size:14px;font-family:inherit}
+  .url-input-row button{padding:10px 20px;background:#E8500A;color:#fff;border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
+  .url-input-row button:hover{background:#FF6B1A}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-bottom:40px}
+
+  .qr-card{background:#fff;border:1px solid #ddd;border-radius:4px;padding:24px;text-align:center;page-break-inside:avoid}
+  .qr-card-header{background:#0A1628;color:#fff;margin:-24px -24px 20px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+  .qr-card-header .logo{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:2px}
+  .qr-card-header .logo span{color:#E8500A}
+  .qr-card-header .campaign-type{font-size:11px;color:#8FA8C8;font-weight:500;letter-spacing:1px;text-transform:uppercase}
+  .qr-canvas{display:flex;justify-content:center;margin-bottom:16px}
+  .qr-canvas canvas, .qr-canvas img{border:4px solid #fff;outline:1px solid #eee}
+  .qr-name{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;color:#0A1628}
+  .qr-url{font-size:11px;color:#888;word-break:break-all;margin-bottom:12px;font-family:monospace}
+  .qr-utm{display:inline-block;background:#FFF0E8;color:#E8500A;font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid #FECFB8;font-weight:500}
+  .qr-instructions{margin-top:14px;padding-top:12px;border-top:1px solid #eee;font-size:12px;color:#666;line-height:1.5;text-align:left}
+
+  .print-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:#0A1628;color:#fff;border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-bottom:32px}
+  .print-btn:hover{background:#1A3260}
+
+  .info-box{background:#EAF3DE;border:1px solid #C0DD97;border-radius:4px;padding:16px 20px;font-size:13px;color:#27500A;margin-bottom:32px;line-height:1.6}
+  .info-box strong{font-weight:600}
+
+  @media print{
+    body{background:#fff;padding:0}
+    .no-print{display:none!important}
+    .grid{grid-template-columns:1fr 1fr;gap:16px;page-break-inside:avoid}
+    .qr-card{border:1px solid #ccc;break-inside:avoid}
+    h1,.subtitle,.url-input-row,.print-btn,.info-box{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="no-print">
+  <h1>Generador de QR — DEACERO</h1>
+  <p class="subtitle">Ingresa la URL de tu landing page publicada en GitHub Pages y genera los 4 QR codes para imprimir</p>
+
+  <div class="url-input-row">
+    <label>URL base de la landing:</label>
+    <input type="text" id="base-url" value="https://TU-USUARIO.github.io/deacero-landing/" placeholder="https://tu-usuario.github.io/deacero-landing/">
+    <button onclick="generateAll()">Generar QR</button>
+  </div>
+
+  <div class="info-box">
+    <strong>Importante:</strong> Cada QR tiene un parámetro UTM diferente. Cuando el lead entre a Salesforce, el campo <code>Lead Source</code> llevará el valor correspondiente al punto de contacto exacto donde escaneó el código. Recuerda actualizar el campo <code>lead_source</code> oculto en tu HTML si quieres trackear por UTM campaign.
+  </div>
+
+  <button class="print-btn no-print" onclick="window.print()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Imprimir / Guardar PDF
+  </button>
+</div>
+
+<div class="grid" id="qr-grid">
+  <!-- QR cards injected by JS -->
+</div>
+
+<script>
+var campaigns = [
+  {
+    id: 'qr1',
+    name: 'Expo CAINTRA 2025',
+    type: 'Stand / Evento',
+    utm: 'expo_caintra_2025',
+    source: 'QR - Feria / Evento',
+    instructions: 'Coloca en el stand, backdrop y roll-ups. Tamaño mínimo recomendado: 8×8 cm para impresión.'
+  },
+  {
+    id: 'qr2',
+    name: 'Catálogo Impreso',
+    type: 'Material Impreso',
+    utm: 'catalogo_acero_q3',
+    source: 'QR - Catálogo',
+    instructions: 'Incluir en contraportada del catálogo de productos. Tamaño mínimo: 3×3 cm con margen blanco.'
+  },
+  {
+    id: 'qr3',
+    name: 'Tarjeta Ejecutivo',
+    type: 'Tarjeta de presentación',
+    utm: 'tarjeta_ejecutivo_mty',
+    source: 'QR - Tarjeta',
+    instructions: 'Parte trasera de la tarjeta. Usar módulo de corrección de error alto (H) para mayor legibilidad.'
+  },
+  {
+    id: 'qr4',
+    name: 'Email Campaign',
+    type: 'Email / Digital',
+    utm: 'email_lamina_jul25',
+    source: 'Email Campaign',
+    instructions: 'Insertar en el footer del email como imagen PNG. Dimensión digital: 150×150 px mínimo.'
+  }
+];
+
+function generateAll() {
+  var base = document.getElementById('base-url').value.trim();
+  if (!base) { alert('Ingresa la URL base'); return; }
+  if (!base.endsWith('/')) base += '/';
+
+  var grid = document.getElementById('qr-grid');
+  grid.innerHTML = '';
+
+  campaigns.forEach(function(c) {
+    var url = base + '?utm_source=deacero&utm_medium=qr&utm_campaign=' + c.utm + '&lead_source=' + encodeURIComponent(c.source);
+
+    var card = document.createElement('div');
+    card.className = 'qr-card';
+    card.innerHTML =
+      '<div class="qr-card-header">' +
+        '<div class="logo">DEA<span>CERO</span></div>' +
+        '<div class="campaign-type">' + c.type + '</div>' +
+      '</div>' +
+      '<div class="qr-canvas" id="canvas-' + c.id + '"></div>' +
+      '<div class="qr-name">' + c.name + '</div>' +
+      '<div class="qr-url">' + url + '</div>' +
+      '<div class="qr-utm">utm_campaign: ' + c.utm + '</div>' +
+      '<div class="qr-instructions">' + c.instructions + '</div>';
+
+    grid.appendChild(card);
+
+    new QRCode(document.getElementById('canvas-' + c.id), {
+      text: url,
+      width: 180,
+      height: 180,
+      colorDark: '#0A1628',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  });
+}
+
+// Auto-generate on load with placeholder
+window.addEventListener('load', function() {
+  generateAll();
+});
+</script>
+</body>
+</html>
