@@ -81,6 +81,7 @@ var campaigns = [
     name: 'Expo CAINTRA 2025',
     type: 'Stand / Evento',
     utm: 'expo_caintra_2025',
+    sfCampaignId: '701cb00000ozgsHAAQ',
     source: 'QR - Feria / Evento',
     instructions: 'Coloca en el stand, backdrop y roll-ups. Tamaño mínimo recomendado: 8×8 cm para impresión.'
   },
@@ -89,6 +90,7 @@ var campaigns = [
     name: 'Catálogo Impreso',
     type: 'Material Impreso',
     utm: 'catalogo_acero_q3',
+    sfCampaignId: '701cb00000p1ov4AAA',
     source: 'QR - Catálogo',
     instructions: 'Incluir en contraportada del catálogo de productos. Tamaño mínimo: 3×3 cm con margen blanco.'
   },
@@ -97,14 +99,16 @@ var campaigns = [
     name: 'Tarjeta Ejecutivo',
     type: 'Tarjeta de presentación',
     utm: 'tarjeta_ejecutivo_mty',
+    sfCampaignId: '701cb00000p1J3VAAU',
     source: 'QR - Tarjeta',
     instructions: 'Parte trasera de la tarjeta. Usar módulo de corrección de error alto (H) para mayor legibilidad.'
   },
   {
     id: 'qr4',
-    name: 'Email Campaign',
+    name: 'Email Blast — Lámina Jul25',
     type: 'Email / Digital',
     utm: 'email_lamina_jul25',
+    sfCampaignId: '701cb00000oyJk7AAE',
     source: 'Email Campaign',
     instructions: 'Insertar en el footer del email como imagen PNG. Dimensión digital: 150×150 px mínimo.'
   }
@@ -119,7 +123,7 @@ function generateAll() {
   grid.innerHTML = '';
 
   campaigns.forEach(function(c) {
-    var url = base + '?utm_source=deacero&utm_medium=qr&utm_campaign=' + c.utm + '&lead_source=' + encodeURIComponent(c.source);
+    var url = base + '?utm_source=deacero&utm_medium=qr&utm_campaign=' + c.utm + '&cid=' + c.sfCampaignId + '&lead_source=' + encodeURIComponent(c.source);
 
     var card = document.createElement('div');
     card.className = 'qr-card';
@@ -131,7 +135,8 @@ function generateAll() {
       '<div class="qr-canvas" id="canvas-' + c.id + '"></div>' +
       '<div class="qr-name">' + c.name + '</div>' +
       '<div class="qr-url">' + url + '</div>' +
-      '<div class="qr-utm">utm_campaign: ' + c.utm + '</div>' +
+      '<div class="qr-utm" style="margin-bottom:4px">utm_campaign: ' + c.utm + '</div>' +
+      '<div class="qr-utm" style="background:#E6F1FB;color:#0C447C;border-color:#B5D4F4">SF Campaign ID: ' + c.sfCampaignId + '</div>' +
       '<div class="qr-instructions">' + c.instructions + '</div>';
 
     grid.appendChild(card);
