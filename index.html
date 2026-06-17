@@ -281,7 +281,7 @@ footer{background:#060E1C;padding:28px 20px;border-top:1px solid var(--border);t
             Estos 701cb... son IDs del pod sandbox y NO existen en PROD.
             Re-extraer los 4 IDs desde la org de PROD y actualizarlos aquí Y en el objeto "campaigns" del <script>.
           -->
-          <input type="hidden" name="Campaign_ID"   id="campaign_id"  value="701cb00000p1ov4AAA">
+          <input type="hidden" name="Campaign_ID"   id="campaign_id"  value="701cb00000p1jLtAAI">
 
           <!--
             [[ CAMBIAR EN PROD #4 — MEMBER STATUS ]]
@@ -565,7 +565,7 @@ footer{background:#060E1C;padding:28px 20px;border-top:1px solid var(--border);t
   var cid         = p.get('cid');
   // Hardening: ignora cid si no tiene forma de Campaign Id (prefijo 701, 15 o 18 chars).
   if(cid && !/^701[A-Za-z0-9]{12}([A-Za-z0-9]{3})?$/.test(cid)) cid = null;
-  var resolved    = cid || (utmCampaign && campaigns[utmCampaign]) || '701cb00000p1ov4AAA';
+  var resolved    = cid || (utmCampaign && campaigns[utmCampaign]) || '701cb00000p1jLtAAI';
   var el = document.getElementById('campaign_id');
   if(el) el.value = resolved;
 })();
