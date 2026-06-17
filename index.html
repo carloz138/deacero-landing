@@ -198,6 +198,18 @@ footer{background:#060E1C;padding:28px 20px;border-top:1px solid var(--border);t
 </head>
 <body>
 
+<!--
+╔══════════════════════════════════════════════════════════════════════════╗
+║  DEACERO — WEB-TO-LEAD · VERSIÓN SANDBOX (preprod2)                         ║
+║  Auditado por Technical Auditor. Configurado para pruebas en sandbox.      ║
+║                                                                            ║
+║  >>> AL PROMOVER A PRODUCCIÓN, cambiar SOLO los 4 puntos marcados con      ║
+║      el tag  [[ CAMBIAR EN PROD ]]  más abajo. Buscar ese texto.           ║
+║                                                                            ║
+║  Org sandbox actual: deacero-2018--preprod2  ·  oid 00Dcb00000EycJY        ║
+╚══════════════════════════════════════════════════════════════════════════╝
+-->
+
 <iframe name="sf-sink" style="display:none" aria-hidden="true"></iframe>
 
 <nav>
@@ -241,8 +253,15 @@ footer{background:#060E1C;padding:28px 20px;border-top:1px solid var(--border);t
           <ul class="error-banner-list" id="error-list"></ul>
         </div>
 
+        <!--
+          [[ CAMBIAR EN PROD #1 — ENDPOINT ]]
+          SANDBOX (actual, correcto para sandbox): https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8
+          PROD:                                    https://webto.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8
+          (Alternativa robusta si test.salesforce.com fallara por política de My Domain:
+           https://deacero-2018--preprod2.sandbox.my.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8)
+        -->
         <form
-          action="https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8&orgId=00Dcb00000EycJY"
+          action="https://test.salesforce.com/servlet/servlet.WebToLead?encoding=UTF-8"
           method="POST"
           id="deacero-form"
           target="sf-sink"
@@ -250,12 +269,42 @@ footer{background:#060E1C;padding:28px 20px;border-top:1px solid var(--border);t
           novalidate
         >
           <!-- ═══ HIDDEN FIELDS ═══ -->
+
+          <!-- [[ CAMBIAR EN PROD #2 — OID ]] sandbox=00Dcb00000EycJY · PROD=00D0b000000uX3F (oid de 15 char de la org PROD) -->
           <input type="hidden" name="oid"        value="00Dcb00000EycJY">
+
           <input type="hidden" name="retURL"     value="https://carloz138.github.io/deacero-landing/">
           <input type="hidden" name="lead_source" value="Web">
-          <!-- Campaign: se sobreescribe desde el UTM en JS -->
+
+          <!--
+            [[ CAMBIAR EN PROD #3 — CAMPAIGN IDs ]]
+            Estos 701cb... son IDs del pod sandbox y NO existen en PROD.
+            Re-extraer los 4 IDs desde la org de PROD y actualizarlos aquí Y en el objeto "campaigns" del <script>.
+          -->
           <input type="hidden" name="Campaign_ID"   id="campaign_id"  value="701cb00000p1ov4AAA">
+
+          <!--
+            [[ CAMBIAR EN PROD #4 — MEMBER STATUS ]]
+            "Responded" DEBE existir como Campaign Member Status válido en CADA campaña usada.
+            Si no existe en la campaña, el Lead se crea pero NO se asocia (falla silenciosa).
+            Verificar en: Campaña > related list "Campaign Member Statuses".
+          -->
           <input type="hidden" name="member_status"                   value="Responded">
+
+          <!-- ═══════════════════════════════════════════════════════════════════
+               DEBUG DE VERIFICACIÓN (SOLO SANDBOX) — para comprobar que el
+               CampaignMember sí se crea y qué campos recibe Salesforce:
+                 1) Comenta temporalmente  target="sf-sink"  en el <form> de arriba.
+                 2) Descomenta las dos líneas de abajo y pon tu correo.
+                 3) Envía un lead de prueba: Salesforce mostrará/enviará el detalle.
+                 4) Revierte ambos cambios al terminar.
+          <input type="hidden" name="debug" value="1">
+          <input type="hidden" name="debugEmail" value="TU_CORREO@deacero.com">
+               ═══════════════════════════════════════════════════════════════════ -->
+
+          <!-- Honeypot anti-bot: invisible para humanos. Si un bot lo llena, el envío se aborta en JS. -->
+          <input type="text" name="website_hp" id="website_hp" tabindex="-1" autocomplete="off"
+                 aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;opacity:0;height:0;width:0;pointer-events:none">
 
           <!-- ═══ VISIBLE FIELDS ═══ -->
 
@@ -499,6 +548,10 @@ footer{background:#060E1C;padding:28px 20px;border-top:1px solid var(--border);t
    Se mantiene el mapeo original. PR_Campania_origen__c removido
    para la POC — solo Campaign_ID + member_status para el
    CampaignMember nativo de Web-to-Lead.
+
+   [[ CAMBIAR EN PROD #3 — CAMPAIGN IDs ]]
+   Estos IDs 701cb... son del pod SANDBOX y NO existen en PROD.
+   Al promover, re-extraer cada ID desde la org de PROD y reemplazarlos aquí.
 ──────────────────────────────────────────────────────────────── */
 (function(){
   var campaigns = {
@@ -510,6 +563,8 @@ footer{background:#060E1C;padding:28px 20px;border-top:1px solid var(--border);t
   var p = new URLSearchParams(window.location.search);
   var utmCampaign = p.get('utm_campaign');
   var cid         = p.get('cid');
+  // Hardening: ignora cid si no tiene forma de Campaign Id (prefijo 701, 15 o 18 chars).
+  if(cid && !/^701[A-Za-z0-9]{12}([A-Za-z0-9]{3})?$/.test(cid)) cid = null;
   var resolved    = cid || (utmCampaign && campaigns[utmCampaign]) || '701cb00000p1ov4AAA';
   var el = document.getElementById('campaign_id');
   if(el) el.value = resolved;
@@ -640,6 +695,17 @@ function validateAll(){
 /* ─── SUBMIT ────────────────────────────────────────────────── */
 function handleSubmit(e){
   e.preventDefault();
+
+  // Honeypot: si está lleno es un bot. Simulamos éxito sin enviar nada a Salesforce.
+  var hp=document.getElementById('website_hp');
+  if(hp && hp.value.trim()!==''){
+    document.getElementById('landing').style.display='none';
+    document.getElementById('ty').classList.add('show');
+    document.getElementById('float-cta').style.display='none';
+    window.scrollTo(0,0);
+    return;
+  }
+
   if(!validateAll()) return;
   var btn=document.getElementById('submit-btn');
   btn.classList.add('loading');
